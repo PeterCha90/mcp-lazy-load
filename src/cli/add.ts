@@ -13,6 +13,7 @@ interface AddOptions {
   windsurf?: boolean;
   opencode?: boolean;
   antigravity?: boolean;
+  codex?: boolean;
   all?: boolean;
 }
 
@@ -37,6 +38,7 @@ export async function runAdd(options: AddOptions): Promise<void> {
       windsurf: options.windsurf,
       opencode: options.opencode,
       antigravity: options.antigravity,
+      codex: options.codex,
     };
 
     for (const [name, enabled] of Object.entries(flagMap)) {
@@ -55,6 +57,7 @@ export async function runAdd(options: AddOptions): Promise<void> {
     console.log("    mcp-lazy add --windsurf");
     console.log("    mcp-lazy add --opencode");
     console.log("    mcp-lazy add --antigravity");
+    console.log("    mcp-lazy add --codex");
     console.log("    mcp-lazy add --all\n");
     process.exit(1);
   }

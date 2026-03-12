@@ -6,6 +6,7 @@ export interface AgentInfo {
   name: string;
   displayName: string;
   configPaths: string[];
+  format?: "json" | "toml";
   note?: string;
 }
 
@@ -44,6 +45,12 @@ export const AGENTS: AgentInfo[] = [
     configPaths: [".mcp.json"],
     note: "Claude Code has native lazy loading support",
   },
+  {
+    name: "codex",
+    displayName: "Codex",
+    configPaths: [".codex/config.toml", "~/.codex/config.toml"],
+    format: "toml",
+  },
 ];
 
 export function detectInstalledAgents(): AgentInfo[] {
@@ -81,8 +88,31 @@ export function registerProxy(
   const resolved = resolvePaths(agent.configPaths);
   let targetPath = findAgentConfig(agent) ?? resolved[0];
 
-  let config: Record<string, unknown> = {};
   let created = false;
+
+  if (agent.format === "toml") {
+    if (!existsSync(targetPath)) {
+      created = true;
+      const dir = dirname(targetPath);
+      if (!existsSync(dir)) {
+        mkdirSync(dir, { recursive: true });
+      }
+    }
+
+    const tomlBlock =
+      `\n[mcp_servers.mcp-lazy]\n` +
+      `command = "npx"\n` +
+      `args = ["-y", "mcp-lazy", "serve", "--config", "${lazyConfigPath}"]\n`;
+
+    const existingContent = existsSync(targetPath)
+      ? readFileSync(targetPath, "utf-8")
+      : "";
+    writeFileSync(targetPath, existingContent + tomlBlock);
+
+    return { configPath: targetPath, created };
+  }
+
+  let config: Record<string, unknown> = {};
 
   if (existsSync(targetPath)) {
     try {
@@ -113,6 +143,15 @@ export function registerProxy(
 export function isProxyRegistered(agent: AgentInfo): boolean {
   const configPath = findAgentConfig(agent);
   if (!configPath) return false;
+
+  if (agent.format === "toml") {
+    try {
+      const content = readFileSync(configPath, "utf-8");
+      return content.includes("[mcp_servers.mcp-lazy]");
+    } catch {
+      return false;
+    }
+  }
 
   try {
     const config = JSON.parse(readFileSync(configPath, "utf-8"));

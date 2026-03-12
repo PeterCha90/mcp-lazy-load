@@ -45,8 +45,16 @@ describe("agents", () => {
       expect(claude!.note).toContain("lazy loading");
     });
 
-    it("has at least 5 agents", () => {
-      expect(AGENTS.length).toBeGreaterThanOrEqual(5);
+    it("contains codex agent", () => {
+      const codex = AGENTS.find((a) => a.name === "codex");
+      expect(codex).toBeDefined();
+      expect(codex!.displayName).toBe("Codex");
+      expect(codex!.format).toBe("toml");
+      expect(codex!.configPaths).toContain(".codex/config.toml");
+    });
+
+    it("has at least 6 agents", () => {
+      expect(AGENTS.length).toBeGreaterThanOrEqual(6);
     });
 
     it("every agent has required fields", () => {
@@ -177,6 +185,46 @@ describe("agents", () => {
       const written = JSON.parse(readFileSync(configPath, "utf-8"));
       expect(written.mcpServers["mcp-lazy"].command).toBe("npx");
       expect(written.mcpServers["mcp-lazy"].args).toContain("/new/config.json");
+    });
+
+    it("creates TOML config file for codex agent", () => {
+      const configPath = join(tempDir, "config.toml");
+      const agent: AgentInfo = {
+        name: "codex",
+        displayName: "Codex",
+        configPaths: [configPath],
+        format: "toml",
+      };
+
+      const result = registerProxy(agent, "./mcp-lazy-config.json");
+
+      expect(result.created).toBe(true);
+      expect(result.configPath).toBe(configPath);
+
+      const content = readFileSync(configPath, "utf-8");
+      expect(content).toContain("[mcp_servers.mcp-lazy]");
+      expect(content).toContain('command = "npx"');
+      expect(content).toContain("mcp-lazy-config.json");
+    });
+
+    it("appends TOML block to existing TOML config", () => {
+      const configPath = join(tempDir, "config.toml");
+      writeFileSync(configPath, '[other_section]\nkey = "value"\n');
+
+      const agent: AgentInfo = {
+        name: "codex",
+        displayName: "Codex",
+        configPaths: [configPath],
+        format: "toml",
+      };
+
+      const result = registerProxy(agent, "./mcp-lazy-config.json");
+
+      expect(result.created).toBe(false);
+
+      const content = readFileSync(configPath, "utf-8");
+      expect(content).toContain('[other_section]');
+      expect(content).toContain("[mcp_servers.mcp-lazy]");
     });
 
     it("handles corrupt existing file gracefully", () => {

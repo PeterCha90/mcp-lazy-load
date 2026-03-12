@@ -12,7 +12,15 @@ MCP servers load all tool definitions into the context window at startup — eve
 npx mcp-lazy init
 ```
 
-That's it. This auto-detects your MCP configs, generates a proxy config, and registers it with your AI agents.
+Then register with your agents:
+
+```bash
+npx mcp-lazy add --codex
+npx mcp-lazy add --cursor
+npx mcp-lazy add --antigravity
+```
+
+That's it. `init` auto-detects your MCP configs and generates a proxy config. `add` registers it with your AI agents.
 
 ## How It Works
 
@@ -28,17 +36,19 @@ With mcp-lazy:
 ```
 
 The proxy exposes just 2 tools:
+
 - **mcp_search_tools** — Search available tools by keyword
 - **mcp_execute_tool** — Execute a tool (lazy-loads the server on first call)
 
 ## Supported Agents
 
-| Agent | Status |
-|-------|--------|
-| Cursor | ✓ Supported |
-| Windsurf | ✓ Supported |
-| Opencode | ✓ Supported |
-| Antigravity | ✓ Supported |
+| Agent       | Status                      |
+| ----------- | --------------------------- |
+| Codex       | ✓ Supported                 |
+| Cursor      | ✓ Supported                 |
+| Windsurf    | ✓ Supported                 |
+| Opencode    | ✓ Supported                 |
+| Antigravity | ✓ Supported                 |
 | Claude Code | Native support (not needed) |
 
 ## Commands
@@ -97,12 +107,12 @@ Token savings: 67,300 → 2,100 (97% reduction)
 
 When an agent calls `mcp_search_tools("query database")`, the proxy searches across all registered tools using weighted scoring:
 
-| Match Type | Score |
-|-----------|-------|
-| Exact tool name match | +1.0 |
-| Partial tool name match | +0.8 |
-| Description keyword match | +0.6 |
-| Server description match | +0.4 |
+| Match Type                | Score |
+| ------------------------- | ----- |
+| Exact tool name match     | +1.0  |
+| Partial tool name match   | +0.8  |
+| Description keyword match | +0.6  |
+| Server description match  | +0.4  |
 
 Results are sorted by relevance and returned to the agent.
 
