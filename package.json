@@ -1,6 +1,6 @@
 {
   "name": "mcp-lazy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP lazy loading proxy for AI agents - reduce context window token usage by 90%+",
   "type": "module",
   "bin": {
@@ -18,7 +18,14 @@
     "test:watch": "vitest",
     "lint": "tsc --noEmit"
   },
-  "keywords": ["mcp", "lazy-loading", "proxy", "ai-agent", "cursor", "windsurf"],
+  "keywords": [
+    "mcp",
+    "lazy-loading",
+    "proxy",
+    "ai-agent",
+    "cursor",
+    "windsurf"
+  ],
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
