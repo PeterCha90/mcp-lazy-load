@@ -24,9 +24,11 @@ npx mcp-lazy add --cursor
 npx mcp-lazy add --codex
 npx mcp-lazy add --antigravity
 npx mcp-lazy add --all          # or register all at once
+npx mcp-lazy init               # pre-build tool cache (recommended)
 ```
 
-- That's it. The `add` command reads your agent's existing MCP config, saves all server definitions to `~/.mcp-lazy/servers.json`, and replaces the agent config with only the mcp-lazy proxy entry.
+- The `add` command reads your agent's existing MCP config, saves all server definitions to `~/.mcp-lazy/servers.json`, and replaces the agent config with only the mcp-lazy proxy entry.
+- Run `init` after `add` to pre-build the tool cache. Without it, the first agent session will be slower while mcp-lazy discovers tools from all servers.
 
   > **Tip:** Installed a new MCP server? Just re-run `npx mcp-lazy add --<agent>` — no extra steps.
 
@@ -100,6 +102,29 @@ Options:
 
 <br>
 
+### `npx mcp-lazy init`
+
+Pre-build the tool cache by connecting to all registered servers:
+
+```bash
+$ npx mcp-lazy init
+
+mcp-lazy init — building tool cache...
+
+  ✓ github-mcp         15 tools   342ms
+  ✓ postgres-mcp       12 tools   518ms
+  ✗ slack-mcp          connection timeout
+  ✓ filesystem          8 tools   120ms
+
+Cache saved: 35 tools from 3/4 servers in 1.2s
+Ready! mcp-lazy serve will start instantly.
+```
+
+- Connects to every server in parallel and saves the tool index to `~/.mcp-lazy/tool-cache.json`
+- Run this after `add` so the first agent session starts instantly instead of waiting for discovery
+
+<br>
+
 ### `npx mcp-lazy doctor`
 
 Diagnose your setup:
@@ -147,6 +172,13 @@ Results are sorted by relevance and returned to the agent.
 <br>
 
 ## FAQ
+
+### Q: The first run is slow.
+
+- On the very first launch, mcp-lazy connects to every registered MCP server to discover available tools and build the search index. This can take 10-30 seconds depending on the number of servers.
+- After that, the tool index is cached at `~/.mcp-lazy/tool-cache.json`. Subsequent launches load from cache and start in under a second.
+- The cache is automatically refreshed when your server configuration changes.
+- Run `npx mcp-lazy init` after setup to pre-build the cache and avoid the slow first start.
 
 ### Q: I'm getting "Error: Unexpected error" during setup.
 

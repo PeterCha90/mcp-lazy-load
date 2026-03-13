@@ -13,9 +13,11 @@ npx mcp-lazy add --cursor
 npx mcp-lazy add --codex
 npx mcp-lazy add --antigravity
 npx mcp-lazy add --all          # 또는 한번에 전부 등록
+npx mcp-lazy init               # 툴 캐시 사전 구축 (권장)
 ```
 
-- 끝! `add` 명령어가 에이전트의 기존 MCP 설정을 읽어서 모든 서버 정의를 `~/.mcp-lazy/servers.json`에 저장하고, 에이전트 설정을 mcp-lazy 프록시 항목 하나로 교체합니다.
+- `add` 명령어가 에이전트의 기존 MCP 설정을 읽어서 모든 서버 정의를 `~/.mcp-lazy/servers.json`에 저장하고, 에이전트 설정을 mcp-lazy 프록시 항목 하나로 교체합니다.
+- `add` 실행 후 `init`을 실행하면 툴 캐시를 사전 구축합니다. 실행하지 않으면 첫 에이전트 세션에서 서버 접속에 시간이 소요됩니다.
 
   > **Tip:** 새로운 MCP 서버를 설치했다면 `npx mcp-lazy add --<agent>`를 다시 실행하세요 — 추가 작업 없이 반영됩니다.
 
@@ -86,6 +88,27 @@ mcp-lazy 적용 후:
   - `--cursor`, `--opencode`, `--antigravity`, `--codex` — 대상 에이전트
   - `--all` — 모든 에이전트에 등록
 
+### `npx mcp-lazy init`
+
+등록된 모든 서버에 접속하여 툴 캐시를 사전 구축합니다:
+
+```bash
+$ npx mcp-lazy init
+
+mcp-lazy init — building tool cache...
+
+  ✓ github-mcp         15 tools   342ms
+  ✓ postgres-mcp       12 tools   518ms
+  ✗ slack-mcp          connection timeout
+  ✓ filesystem          8 tools   120ms
+
+Cache saved: 35 tools from 3/4 servers in 1.2s
+Ready! mcp-lazy serve will start instantly.
+```
+
+- 모든 서버에 병렬로 접속하여 툴 인덱스를 `~/.mcp-lazy/tool-cache.json`에 저장합니다
+- `add` 실행 후 이 명령어를 실행하면 첫 에이전트 세션이 즉시 시작됩니다
+
 ### `npx mcp-lazy doctor`
 
 - 설치 상태를 진단합니다:
@@ -133,6 +156,13 @@ stdio:   npx mcp-remote https://mcp.notion.com/sse
 <br>
 
 ## FAQ
+
+### Q: 최초 실행이 느립니다
+
+- 첫 실행 시 mcp-lazy가 등록된 모든 MCP 서버에 접속하여 사용 가능한 툴을 수집하고 검색 인덱스를 구축합니다. 서버 수에 따라 10~30초 정도 소요될 수 있습니다.
+- 이후에는 툴 인덱스가 `~/.mcp-lazy/tool-cache.json`에 캐시되어, 1초 이내로 시작됩니다.
+- 서버 설정이 변경되면 캐시가 자동으로 갱신됩니다.
+- `npx mcp-lazy init`을 설정 후 실행하면 캐시를 사전 구축하여 느린 첫 시작을 방지할 수 있습니다.
 
 ### Q: 설치 중 "Error: Unexpected error"가 발생합니다
 
