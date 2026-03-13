@@ -13,7 +13,9 @@
 
 > Reduce MCP context window token usage by 90%+ with lazy loading. One command setup.
 
-MCP servers load all tool definitions into the context window at startup — even before you use them. With 5-10 servers, this can consume 30-50% of your context window. **mcp-lazy** proxies all your MCP servers through a single lightweight proxy that loads tools on-demand.
+- MCP servers load all tool definitions into the context window at startup — even before you use them. With 5-10 servers, this can consume 30-50% of your context window. **mcp-lazy** proxies all your MCP servers through a single lightweight proxy that loads tools on-demand.
+
+<br>
 
 ## Quick Start
 
@@ -24,13 +26,13 @@ npx mcp-lazy add --antigravity
 npx mcp-lazy add --all          # or register all at once
 ```
 
-That's it. The `add` command reads your agent's existing MCP config, saves all server definitions to `~/.mcp-lazy/servers.json`, and replaces the agent config with only the mcp-lazy proxy entry.
+- That's it. The `add` command reads your agent's existing MCP config, saves all server definitions to `~/.mcp-lazy/servers.json`, and replaces the agent config with only the mcp-lazy proxy entry.
 
-> **Tip:** Installed a new MCP server? Just re-run `npx mcp-lazy add --<agent>` — no extra steps.
+  > **Tip:** Installed a new MCP server? Just re-run `npx mcp-lazy add --<agent>` — no extra steps.
+
+<br>
 
 ## How It Works
-
-![mcp-lazy Architecture](./architecture.png)
 
 ```
 Without mcp-lazy:
@@ -49,9 +51,13 @@ The proxy exposes just 2 tools:
 - **mcp_search_tools** — Search available tools by keyword
 - **mcp_execute_tool** — Execute a tool (lazy-loads the server on first call)
 
+![mcp-lazy Architecture](./architecture.png)
+
+<br>
+
 ## What `add` Does
 
-When you run `npx mcp-lazy add --<agent>`, it:
+- When you run `npx mcp-lazy add --<agent>`, it:
 
 1. Reads your agent's existing MCP server config
 2. Extracts all server definitions (stdio and URL-based)
@@ -59,7 +65,9 @@ When you run `npx mcp-lazy add --<agent>`, it:
 4. Saves everything to `~/.mcp-lazy/servers.json`
 5. Replaces the agent config with only the mcp-lazy proxy entry
 
-The proxy reads from `~/.mcp-lazy/servers.json` at runtime — that's where all your server definitions live after setup.
+- The proxy reads from `~/.mcp-lazy/servers.json` at runtime — that's where all your server definitions live after setup.
+
+<br>
 
 ## Supported Agents
 
@@ -71,22 +79,26 @@ The proxy reads from `~/.mcp-lazy/servers.json` at runtime — that's where all 
 | Codex       | ✓ Supported                 |
 | Claude Code | Native support (not needed) |
 
+<br>
+
 ## Commands
 
 ### `npx mcp-lazy add`
 
-Register the proxy with your agent:
+- Register the proxy with your agent:
 
-```bash
-npx mcp-lazy add --cursor        # register with Cursor
-npx mcp-lazy add --antigravity   # register with Antigravity
-npx mcp-lazy add --all           # register with all agents
-```
+  ```bash
+  npx mcp-lazy add --cursor        # register with Cursor
+  npx mcp-lazy add --antigravity   # register with Antigravity
+  npx mcp-lazy add --all           # register with all agents
+  ```
 
 Options:
 
 - `--cursor`, `--opencode`, `--antigravity`, `--codex` — target agent
 - `--all` — register with all agents
+
+<br>
 
 ### `npx mcp-lazy doctor`
 
@@ -103,17 +115,21 @@ $ npx mcp-lazy doctor
 Token savings: 67,300 → 350 (99.5% reduction)
 ```
 
+<br>
+
 ## URL & OAuth Support
 
-Some MCP servers are hosted at a URL and require OAuth (Notion, Slack, Linear, etc.). The `add` command automatically handles these by converting them to stdio commands using `npx mcp-remote`:
+- Some MCP servers are hosted at a URL and require OAuth (Notion, Slack, Linear, etc.). The `add` command automatically handles these by converting them to stdio commands using `npx mcp-remote`:
 
-```
-URL server: https://mcp.notion.com/sse
-          ↓ converted automatically
-stdio:    npx mcp-remote https://mcp.notion.com/sse
-```
+  ```
+  URL server: https://mcp.notion.com/sse
+            ↓ converted automatically
+  stdio:    npx mcp-remote https://mcp.notion.com/sse
+  ```
 
-This means all your servers — local stdio and remote OAuth-requiring URL servers — get proxied through mcp-lazy with no manual conversion needed.
+- This means all your servers — local stdio and remote OAuth-requiring URL servers — get proxied through mcp-lazy with no manual conversion needed.
+
+<br>
 
 ## How Search Works
 
@@ -128,32 +144,38 @@ When an agent calls `mcp_search_tools("query database")`, the proxy searches acr
 
 Results are sorted by relevance and returned to the agent.
 
+<br>
+
 ## FAQ
 
 ### Q: I'm getting "Error: Unexpected error" during setup.
 
-Check that you have read/write permissions for the config directory. For example:
+- Check that you have read/write permissions for the config directory. For example:
 
-- Cursor: `~/.cursor/mcp.json`
-- Codex: `~/.codex/config.toml`
-- Opencode: `~/.config/opencode/config.json`
-- Antigravity: `~/.gemini/antigravity/mcp_config.json`
+  > Cursor: `~/.cursor/mcp.json` <br>
+  > Codex: `~/.codex/config.toml` <br>
+  > Opencode: `~/.config/opencode/config.json` <br>
+  > Antigravity: `~/.gemini/antigravity/mcp_config.json`
 
-Try running `ls -la` on the relevant path to verify permissions. If needed, fix with `chmod 644 <path>`.
+- Try running `ls -la` on the relevant path to verify permissions. If needed, fix with `chmod 644 <path>`.
 
 ### Q: I installed a new MCP server after setting up mcp-lazy. How do I add it?
 
-Simply add the new server to your agent's MCP config as usual, then re-run the add command:
+- Simply add the new server to your agent's MCP config as usual, then re-run the add command:
 
-```bash
-npx mcp-lazy add --cursor    # re-scans and picks up the new server
-```
+  ```bash
+  npx mcp-lazy add --cursor    # re-scans and picks up the new server
+  ```
 
-mcp-lazy will detect the new server, add it to `~/.mcp-lazy/servers.json`, and keep the proxy config intact.
+- mcp-lazy will detect the new server, add it to `~/.mcp-lazy/servers.json`, and keep the proxy config intact.
+
+<br>
 
 ## Scope
 
-mcp-lazy currently supports **global MCP configurations only** (e.g., `~/.cursor/mcp.json`). Project-level MCP configs (e.g., `.cursor/mcp.json` in a project root) are not yet supported.
+- mcp-lazy currently supports **global MCP configurations only** (e.g., `~/.cursor/mcp.json`). Project-level MCP configs (e.g., `.cursor/mcp.json` in a project root) are not yet supported.
+
+<br>
 
 ## Requirements
 
