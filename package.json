@@ -1,6 +1,6 @@
 {
   "name": "mcp-lazy",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "MCP lazy loading proxy for AI agents - reduce context window token usage by 90%+",
   "type": "module",
   "bin": {
@@ -26,6 +26,14 @@
     "ai-agent",
     "cursor"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeterCha90/mcp-lazy.git"
+  },
+  "homepage": "https://github.com/PeterCha90/mcp-lazy#readme",
+  "bugs": {
+    "url": "https://github.com/PeterCha90/mcp-lazy/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
