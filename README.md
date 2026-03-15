@@ -206,7 +206,6 @@ Results are sorted by relevance and returned to the agent.
 - Check that you have read/write permissions for the config directory. For example:
 
   > Cursor: `~/.cursor/mcp.json` <br>
-  > Codex: `~/.codex/config.toml` <br>
   > Opencode: `~/.config/opencode/config.json` <br>
   > Antigravity: `~/.gemini/antigravity/mcp_config.json`
 
