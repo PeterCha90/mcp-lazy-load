@@ -1,4 +1,13 @@
-# mcp-lazy
+<pre>
+███╗   ███╗ ██████╗██████╗       ██╗      █████╗ ███████╗██╗   ██╗
+████╗ ████║██╔════╝██╔══██╗      ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝
+██╔████╔██║██║     ██████╔╝█████╗██║     ███████║  ███╔╝  ╚████╔╝
+██║╚██╔╝██║██║     ██╔═══╝ ╚════╝██║     ██╔══██║ ███╔╝    ╚██╔╝
+██║ ╚═╝ ██║╚██████╗██║           ███████╗██║  ██║███████╗   ██║
+╚═╝     ╚═╝ ╚═════╝╚═╝           ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝
+</pre>
+
+# mcp-lazy 🫠
 
 [English](../README.md)
 
@@ -6,18 +15,37 @@
 
 - MCP 서버들은 시작할 때 모든 툴 정의를 컨텍스트 윈도우에 로딩합니다 — 사용하기도 전에요. 서버가 5~10개면 컨텍스트 윈도우의 30~50%를 차지할 수 있습니다. **mcp-lazy**는 모든 MCP 서버를 하나의 경량 프록시로 묶어서, 필요할 때만 툴을 로딩합니다.
 
+<center>
+
+`시작 시 82개 툴이 로딩됨`
+![Before mcp-lazy](../public/before.png)
+
+👇 `mcp-lazy 적용 후 단 2개`
+
+![After mcp-lazy](../public/after.png)
+
+</center>
+
 ## 빠른 시작
 
+사용하는 에이전트에 맞게 하나를 선택하세요:
+
 ```bash
-npx mcp-lazy add --cursor
-npx mcp-lazy add --codex
-npx mcp-lazy add --antigravity
-npx mcp-lazy add --all          # 또는 한번에 전부 등록
-npx mcp-lazy init               # 툴 캐시 사전 구축 (권장)
+npx mcp-lazy add --cursor        # Cursor
+npx mcp-lazy add --codex         # Codex
+npx mcp-lazy add --antigravity   # Antigravity
+npx mcp-lazy add --opencode      # Opencode
+npx mcp-lazy add --all           # 또는 한번에 전부 등록
+```
+
+그 다음 툴 캐시를 사전 구축합니다 (권장):
+
+```bash
+npx mcp-lazy init
 ```
 
 - `add` 명령어가 에이전트의 기존 MCP 설정을 읽어서 모든 서버 정의를 `~/.mcp-lazy/servers.json`에 저장하고, 에이전트 설정을 mcp-lazy 프록시 항목 하나로 교체합니다.
-- `add` 실행 후 `init`을 실행하면 툴 캐시를 사전 구축합니다. 실행하지 않으면 첫 에이전트 세션에서 서버 접속에 시간이 소요됩니다.
+- `init`은 툴 캐시를 사전 구축하여 첫 에이전트 세션이 즉시 시작되도록 합니다. 실행하지 않으면 첫 세션에서 서버 접속에 시간이 소요됩니다.
 
   > **Tip:** 새로운 MCP 서버를 설치했다면 `npx mcp-lazy add --<agent>`를 다시 실행하세요 — 추가 작업 없이 반영됩니다.
 

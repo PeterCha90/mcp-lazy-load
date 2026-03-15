@@ -7,7 +7,7 @@
 ╚═╝     ╚═╝ ╚═════╝╚═╝           ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝
 </pre>
 
-# mcp-lazy
+# mcp-lazy 🫠
 
 [한국어](./docs/README.ko.md)
 
@@ -15,20 +15,41 @@
 
 - MCP servers load all tool definitions into the context window at startup — even before you use them. With 5-10 servers, this can consume 30-50% of your context window. **mcp-lazy** proxies all your MCP servers through a single lightweight proxy that loads tools on-demand.
 
+<center>
+
+<br>
+
+`82 tools exposed at startup`
+![Before mcp-lazy](./public/before.png)
+
+👇 `Just 2 with mcp-lazy`
+
+![After mcp-lazy](./public/after.png)
+
+</center>
+
 <br>
 
 ## Quick Start
 
+Pick one for your agent:
+
 ```bash
-npx mcp-lazy add --cursor
-npx mcp-lazy add --codex
-npx mcp-lazy add --antigravity
-npx mcp-lazy add --all          # or register all at once
-npx mcp-lazy init               # pre-build tool cache (recommended)
+npx mcp-lazy add --cursor        # Cursor
+npx mcp-lazy add --codex         # Codex
+npx mcp-lazy add --antigravity   # Antigravity
+npx mcp-lazy add --opencode      # Opencode
+npx mcp-lazy add --all           # or all at once
+```
+
+Then pre-build the tool cache (recommended):
+
+```bash
+npx mcp-lazy init
 ```
 
 - The `add` command reads your agent's existing MCP config, saves all server definitions to `~/.mcp-lazy/servers.json`, and replaces the agent config with only the mcp-lazy proxy entry.
-- Run `init` after `add` to pre-build the tool cache. Without it, the first agent session will be slower while mcp-lazy discovers tools from all servers.
+- `init` pre-builds the tool cache so your first agent session starts instantly. Without it, the first session will be slightly slower while mcp-lazy discovers tools from all servers.
 
   > **Tip:** Installed a new MCP server? Just re-run `npx mcp-lazy add --<agent>` — no extra steps.
 
