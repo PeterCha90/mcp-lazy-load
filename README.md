@@ -37,7 +37,6 @@ Pick one for your agent:
 
 ```bash
 npx mcp-lazy add --cursor        # Cursor
-npx mcp-lazy add --codex         # Codex
 npx mcp-lazy add --antigravity   # Antigravity
 npx mcp-lazy add --opencode      # Opencode
 npx mcp-lazy add --all           # or all at once
@@ -100,7 +99,7 @@ The proxy exposes just 2 tools:
 | Cursor      | ✓ Supported                 |
 | Opencode    | ✓ Supported                 |
 | Antigravity | ✓ Supported                 |
-| Codex       | ✓ Supported                 |
+| Codex       | Native support (not needed) |
 | Claude Code | Native support (not needed) |
 
 <br>
